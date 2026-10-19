@@ -1,0 +1,87 @@
+{
+  "name": "local-voice",
+  "version": "2.0.0",
+  "description": "System-wide voice dictation — toggle or hold a hotkey, speak, text gets typed",
+  "private": true,
+  "license": "MIT",
+  "author": "Nick Falshaw",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "vitest run",
+    "dist": "node scripts/gen-app-icon.js && electron-builder --win nsis --x64 --publish never"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.2.0",
+    "electron-store": "^12.0.0",
+    "onnxruntime-node": "1.30.0",
+    "uiohook-napi": "1.5.5"
+  },
+  "devDependencies": {
+    "electron": "^44.9.0",
+    "electron-builder": "26.17.0",
+    "sharp": "^0.35.3",
+    "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "overrides": {
+    "sharp": "$sharp",
+    "adm-zip": ">=0.6.0",
+    "fast-uri": ">=3.1.5"
+  },
+  "productName": "Local Voice",
+  "build": {
+    "appId": "io.github.falshaw.local-voice",
+    "productName": "Local Voice",
+    "executableName": "Local Voice",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "lib/**/*",
+      "renderer/**/*",
+      "!**/node_modules/@huggingface/transformers/.cache/**",
+      "!**/node_modules/onnxruntime-node/bin/napi-v6/{darwin,linux}/**",
+      "!**/node_modules/onnxruntime-node/bin/napi-v6/win32/arm64/**",
+      "!**/node_modules/uiohook-napi/prebuilds/{darwin-*,linux-*,win32-arm64}/**",
+      "!**/node_modules/uiohook-napi/{src,libuiohook}/**",
+      "!**/node_modules/onnxruntime-web/**"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/onnxruntime-node/**",
+      "**/node_modules/uiohook-napi/**",
+      "**/node_modules/sharp/**",
+      "**/node_modules/@img/**"
+    ],
+    "npmRebuild": false,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Local Voice",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": false,
+      "artifactName": "Local-Voice-Setup-${version}.exe"
+    }
+  }
+}

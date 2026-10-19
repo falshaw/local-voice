@@ -1,0 +1,239 @@
+:root {
+  --bg: #0b0a1a;
+  --panel: #14122a;
+  --line: rgba(212, 168, 67, 0.25);
+  --text: #e2e8f0;
+  --muted: #9ca3af;
+  --gold: #d4a843;
+  --red: #ef4444;
+  --green: #a3e635;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px 8px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+#status {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+nav {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+nav button {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  padding: 8px 12px;
+  cursor: pointer;
+  font: inherit;
+}
+
+nav button[aria-selected="true"] {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+main {
+  padding: 16px 20px 40px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.hint {
+  color: var(--muted);
+  margin: 0 0 12px;
+  max-width: 70ch;
+}
+
+form fieldset,
+fieldset {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 0 0 14px;
+  padding: 10px 14px 12px;
+}
+
+legend {
+  color: var(--gold);
+  padding: 0 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.row .note {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: -2px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font: inherit;
+  width: 100%;
+  max-width: 340px;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--gold);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+td input[type="text"] {
+  max-width: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 14px;
+}
+
+button,
+.button {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+
+button.primary {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+button.danger {
+  border-color: rgba(239, 68, 68, 0.6);
+  color: var(--red);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+#history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#history-list li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+#history-list .meta {
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+#history-list .text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 6px;
+}
+
+#history-list .buttons {
+  display: flex;
+  gap: 6px;
+}
+
+#toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  max-width: 420px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+#toast.error {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.radios label {
+  white-space: nowrap;
+}
+
+td select {
+  max-width: none;
+}

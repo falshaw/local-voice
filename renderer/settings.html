@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice — Settings</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Voice settings</h1>
+      <div id="status" aria-live="polite"></div>
+    </header>
+
+    <nav role="tablist">
+      <button role="tab" data-tab="general" aria-selected="true">General</button>
+      <button role="tab" data-tab="dictionary">Dictionary</button>
+      <button role="tab" data-tab="modes">Modes</button>
+      <button role="tab" data-tab="history">History</button>
+    </nav>
+
+    <main>
+      <section id="tab-general" class="tab">
+        <form id="general-form" autocomplete="off"></form>
+      </section>
+
+      <section id="tab-dictionary" class="tab hidden">
+        <p class="hint">
+          Whole-word replacements, applied before and after cleanup. Longer phrases win. A
+          lowercase replacement copies the spoken casing; one with capitals is used as typed.
+          No mode ticked = every mode.
+        </p>
+        <table id="dict-table">
+          <thead>
+            <tr>
+              <th>Spoken</th>
+              <th>Typed</th>
+              <th title="Match exact spelling only">Aa</th>
+              <th>raw</th>
+              <th>formal</th>
+              <th>code</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="actions">
+          <button id="dict-add" type="button">Add entry</button>
+          <button id="dict-save" type="button" class="primary">Save</button>
+          <label class="button">Import JSON<input id="dict-import" type="file" accept="application/json,.json" hidden /></label>
+          <button id="dict-export" type="button">Export JSON</button>
+        </div>
+      </section>
+
+      <section id="tab-modes" class="tab hidden">
+        <p class="hint">
+          The window in front when recording starts picks the mode. Case-insensitive
+          substring match, first rule wins, otherwise the default mode. Window titles are
+          never stored.
+        </p>
+        <table id="rules-table">
+          <thead>
+            <tr>
+              <th>Contains</th>
+              <th>In</th>
+              <th>Mode</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <fieldset>
+          <legend>Ollama cleanup per mode (needs “Cleanup” on in General)</legend>
+          <label><input type="checkbox" id="mc-raw" /> raw</label>
+          <label><input type="checkbox" id="mc-formal" /> formal</label>
+          <label><input type="checkbox" id="mc-code" /> code</label>
+        </fieldset>
+        <div class="actions">
+          <button id="rules-add" type="button">Add rule</button>
+          <button id="rules-save" type="button" class="primary">Save</button>
+          <button id="rules-defaults" type="button">Restore defaults</button>
+        </div>
+      </section>
+
+      <section id="tab-history" class="tab hidden">
+        <div class="actions">
+          <button id="history-refresh" type="button">Refresh</button>
+          <button id="history-clear" type="button" class="danger">Clear history</button>
+        </div>
+        <ul id="history-list"></ul>
+        <audio id="history-audio" hidden></audio>
+      </section>
+    </main>
+
+    <div id="toast" role="status" class="hidden"></div>
+    <script src="settings.js"></script>
+  </body>
+</html>

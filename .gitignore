@@ -1,0 +1,15 @@
+node_modules/
+dist/
+out/
+coverage/
+*.log
+*.exe
+*.dmg
+*.AppImage
+.env
+.env.*
+!.env.example
+# model caches and local bench fixtures
+models/
+.cache/
+scripts/fixtures/
