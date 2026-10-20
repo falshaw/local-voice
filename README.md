@@ -54,13 +54,20 @@ npm start          # launches the tray app
 npm run dev        # same, with --dev
 ```
 
-On first start the Whisper model is downloaded into the model cache; progress is shown in the overlay. Open **Settings...** from the tray menu to change hotkeys, language, model, device, VAD, dictionary, modes, cleanup and history.
+The first `npm start` takes noticeably longer than later ones, for two downloads:
+
+1. **Electron itself.** The `electron` package fetches its platform binary (~100 MB) the first time it runs and prints `Downloading Electron binary...`.
+2. **The Whisper model.** `whisper-small` (~577 MB) is downloaded from Hugging Face into `%APPDATA%\local-voice\models`; progress is shown in the overlay. Dictation works once it finishes.
+
+Both are cached, so later starts take a few seconds. Open **Settings...** from the tray menu to change hotkeys, language, model, device, VAD, dictionary, modes, cleanup and history.
 
 Build a Windows installer (NSIS, x64) into `dist/`:
 
 ```bash
 npm run dist
 ```
+
+`npm run dist` first runs `scripts/gen-app-icon.js`, which writes `build/icon.ico` from the tray mic glyph. The icon is a generated file and is not tracked in git.
 
 ## Configuration
 
