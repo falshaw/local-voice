@@ -7,94 +7,157 @@
       content="default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voice — Settings</title>
+    <title>Local Voice — Settings</title>
+    <link rel="stylesheet" href="base.css" />
     <link rel="stylesheet" href="settings.css" />
+    <script src="theme.js"></script>
   </head>
   <body>
-    <header>
-      <h1>Voice settings</h1>
-      <div id="status" aria-live="polite"></div>
-    </header>
+    <div class="bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
 
-    <nav role="tablist">
-      <button role="tab" data-tab="general" aria-selected="true">General</button>
-      <button role="tab" data-tab="dictionary">Dictionary</button>
-      <button role="tab" data-tab="modes">Modes</button>
-      <button role="tab" data-tab="history">History</button>
-    </nav>
-
-    <main>
-      <section id="tab-general" class="tab">
-        <form id="general-form" autocomplete="off"></form>
-      </section>
-
-      <section id="tab-dictionary" class="tab hidden">
-        <p class="hint">
-          Whole-word replacements, applied before and after cleanup. Longer phrases win. A
-          lowercase replacement copies the spoken casing; one with capitals is used as typed.
-          No mode ticked = every mode.
-        </p>
-        <table id="dict-table">
-          <thead>
-            <tr>
-              <th>Spoken</th>
-              <th>Typed</th>
-              <th title="Match exact spelling only">Aa</th>
-              <th>raw</th>
-              <th>formal</th>
-              <th>code</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <div class="actions">
-          <button id="dict-add" type="button">Add entry</button>
-          <button id="dict-save" type="button" class="primary">Save</button>
-          <label class="button">Import JSON<input id="dict-import" type="file" accept="application/json,.json" hidden /></label>
-          <button id="dict-export" type="button">Export JSON</button>
+    <div class="stage">
+      <nav class="rail glass" aria-label="Settings sections">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="2" width="6" height="12" rx="3" />
+              <path d="M5 10a7 7 0 0 0 14 0" />
+              <path d="M12 17v4M8 21h8" />
+            </svg>
+          </div>
+          <span>Local <b>Voice</b></span>
         </div>
-      </section>
 
-      <section id="tab-modes" class="tab hidden">
-        <p class="hint">
-          The window in front when recording starts picks the mode. Case-insensitive
-          substring match, first rule wins, otherwise the default mode. Window titles are
-          never stored.
-        </p>
-        <table id="rules-table">
-          <thead>
-            <tr>
-              <th>Contains</th>
-              <th>In</th>
-              <th>Mode</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <fieldset>
-          <legend>Ollama cleanup per mode (needs “Cleanup” on in General)</legend>
-          <label><input type="checkbox" id="mc-raw" /> raw</label>
-          <label><input type="checkbox" id="mc-formal" /> formal</label>
-          <label><input type="checkbox" id="mc-code" /> code</label>
-        </fieldset>
-        <div class="actions">
-          <button id="rules-add" type="button">Add rule</button>
-          <button id="rules-save" type="button" class="primary">Save</button>
-          <button id="rules-defaults" type="button">Restore defaults</button>
+        <div class="tabs" role="tablist" aria-orientation="vertical">
+          <button role="tab" id="tabbtn-general" data-tab="general" aria-controls="tab-general" aria-selected="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
+            General
+          </button>
+          <button role="tab" id="tabbtn-dictionary" data-tab="dictionary" aria-controls="tab-dictionary" aria-selected="false" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z" /><path d="M5 17a3 3 0 0 1 3-3h11" /></svg>
+            Dictionary
+          </button>
+          <button role="tab" id="tabbtn-modes" data-tab="modes" aria-controls="tab-modes" aria-selected="false" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2" /><path d="M3 8h18M8 21h8" /></svg>
+            Modes
+          </button>
+          <button role="tab" id="tabbtn-history" data-tab="history" aria-controls="tab-history" aria-selected="false" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+            History
+          </button>
         </div>
-      </section>
 
-      <section id="tab-history" class="tab hidden">
-        <div class="actions">
-          <button id="history-refresh" type="button">Refresh</button>
-          <button id="history-clear" type="button" class="danger">Clear history</button>
+        <div class="side-foot">
+          <div class="eyebrow">Status</div>
+          <ul id="status" class="status-list" aria-live="polite"></ul>
+          <button id="theme-btn" type="button" class="theme-btn"></button>
         </div>
-        <ul id="history-list"></ul>
-        <audio id="history-audio" hidden></audio>
-      </section>
-    </main>
+      </nav>
+
+      <main class="panel glass">
+        <section id="tab-general" class="tab" role="tabpanel" aria-labelledby="tabbtn-general">
+          <header class="top-row">
+            <div>
+              <div class="eyebrow">Settings</div>
+              <h1>General</h1>
+            </div>
+          </header>
+          <form id="general-form" autocomplete="off"></form>
+        </section>
+
+        <section id="tab-dictionary" class="tab hidden" role="tabpanel" aria-labelledby="tabbtn-dictionary">
+          <header class="top-row">
+            <div>
+              <div class="eyebrow">Replacements</div>
+              <h1>Dictionary</h1>
+            </div>
+          </header>
+          <p class="hint">
+            Whole-word replacements, applied before and after cleanup. Longer phrases win. A
+            lowercase replacement copies the spoken casing; one with capitals is used as typed.
+            No mode ticked = every mode.
+          </p>
+          <div class="tile table-tile">
+            <table id="dict-table">
+              <thead>
+                <tr>
+                  <th scope="col">Spoken</th>
+                  <th scope="col">Typed</th>
+                  <th scope="col" class="c" title="Match exact spelling only">Aa</th>
+                  <th scope="col" class="c">raw</th>
+                  <th scope="col" class="c">formal</th>
+                  <th scope="col" class="c">code</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="actions">
+            <button id="dict-add" type="button" class="btn btn-ghost">Add entry</button>
+            <button id="dict-save" type="button" class="btn btn-primary">Save</button>
+            <label class="btn btn-ghost file-btn">Import JSON<input id="dict-import" type="file" accept="application/json,.json" /></label>
+            <button id="dict-export" type="button" class="btn btn-ghost">Export JSON</button>
+          </div>
+        </section>
+
+        <section id="tab-modes" class="tab hidden" role="tabpanel" aria-labelledby="tabbtn-modes">
+          <header class="top-row">
+            <div>
+              <div class="eyebrow">App-aware</div>
+              <h1>Modes</h1>
+            </div>
+          </header>
+          <p class="hint">
+            The window in front when recording starts picks the mode. Case-insensitive
+            substring match, first rule wins, otherwise the default mode. Window titles are
+            never stored.
+          </p>
+          <div class="tile table-tile">
+            <table id="rules-table">
+              <thead>
+                <tr>
+                  <th scope="col">Contains</th>
+                  <th scope="col">In</th>
+                  <th scope="col">Mode</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <fieldset class="tile group">
+            <legend>Ollama cleanup per mode</legend>
+            <p class="note">Needs “Clean up transcripts” on in General.</p>
+            <div class="checks">
+              <label><input type="checkbox" id="mc-raw" /> raw</label>
+              <label><input type="checkbox" id="mc-formal" /> formal</label>
+              <label><input type="checkbox" id="mc-code" /> code</label>
+            </div>
+          </fieldset>
+          <div class="actions">
+            <button id="rules-add" type="button" class="btn btn-ghost">Add rule</button>
+            <button id="rules-save" type="button" class="btn btn-primary">Save</button>
+            <button id="rules-defaults" type="button" class="btn btn-ghost">Restore defaults</button>
+          </div>
+        </section>
+
+        <section id="tab-history" class="tab hidden" role="tabpanel" aria-labelledby="tabbtn-history">
+          <header class="top-row">
+            <div>
+              <div class="eyebrow">Stored on this computer</div>
+              <h1>History</h1>
+            </div>
+            <div class="actions top-actions">
+              <button id="history-refresh" type="button" class="btn btn-ghost btn-sm">Refresh</button>
+              <button id="history-clear" type="button" class="btn btn-danger btn-sm">Clear history</button>
+            </div>
+          </header>
+          <ul id="history-list"></ul>
+          <audio id="history-audio" hidden></audio>
+        </section>
+      </main>
+    </div>
 
     <div id="toast" role="status" class="hidden"></div>
     <script src="settings.js"></script>

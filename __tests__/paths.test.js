@@ -22,6 +22,14 @@ describe("paths", () => {
     expect(legacyCacheDir("/opt/app")).toBe(path.join("/opt/app", "node_modules", "@huggingface", "transformers", ".cache"));
   });
 
+  it("honours an absolute LOCAL_VOICE_USER_DATA override and ignores relative or empty ones", () => {
+    const abs = path.resolve(root, "isolated");
+    expect(userDataDir("C:/A", { LOCAL_VOICE_USER_DATA: abs })).toBe(abs);
+    expect(userDataDir("C:/A", { LOCAL_VOICE_USER_DATA: "  " })).toBe(path.join("C:/A", "local-voice"));
+    expect(userDataDir("C:/A", { LOCAL_VOICE_USER_DATA: "relative/dir" })).toBe(path.join("C:/A", "local-voice"));
+    expect(userDataDir("C:/A", {})).toBe(path.join("C:/A", "local-voice"));
+  });
+
   it("seeds an empty target from the legacy cache", async () => {
     const from = path.join(root, "legacy");
     const to = path.join(root, "ud", "models");

@@ -86,6 +86,7 @@ function cancelRecording() {
 // --- Event Handlers ---
 
 window.voice.onRecordingStart(() => {
+  refreshReadyLabel();
   document.body.className = "recording";
   statusText.textContent = "Listening... (Esc cancels)";
   resultText.classList.add("hidden");
@@ -137,12 +138,16 @@ window.voice.onTranscriptionError((error) => {
   }, 2000);
 });
 
-window.voice
-  .getSettings()
-  .then((s) => {
-    readyLabel = `Ready — ${s.hotkeyMode === "hold" ? "Hold" : "Press"} ${s.hotkey}`;
-  })
-  .catch(() => {});
+function refreshReadyLabel() {
+  return window.voice
+    .getSettings()
+    .then((s) => {
+      readyLabel = `Ready — ${s.hotkeyMode === "hold" ? "Hold" : "Press"} ${s.hotkey}`;
+      if (statusText.textContent.startsWith("Ready")) statusText.textContent = readyLabel;
+    })
+    .catch(() => {});
+}
+refreshReadyLabel();
 
 // Show loading state on startup
 statusText.textContent = "Loading model...";

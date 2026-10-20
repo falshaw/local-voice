@@ -7,6 +7,7 @@ import {
   MODEL_IDS,
   LANGUAGES,
   MODES,
+  THEMES,
   validateSetting,
   migrateLanguage,
   migrateSettings,
@@ -31,13 +32,14 @@ const EXPECTED_KEYS = [
   "modesEnabled",
   "showOverlay",
   "sttDevice",
+  "theme",
   "vadAutoStop",
   "vadEnabled",
   "vadSilenceMs",
 ];
 
 describe("settings schema", () => {
-  it("exposes exactly the 21 store keys", () => {
+  it("exposes exactly the 22 store keys", () => {
     expect([...SETTING_KEYS].sort()).toEqual(EXPECTED_KEYS);
     expect(Object.keys(SETTING_TYPES).sort()).toEqual(EXPECTED_KEYS);
     expect(Object.keys(DEFAULTS).sort()).toEqual(EXPECTED_KEYS);
@@ -72,7 +74,9 @@ describe("settings schema", () => {
       vadSilenceMs: 2000,
       modesEnabled: false,
       defaultMode: "raw",
+      theme: "system",
     });
+    expect(THEMES).toEqual(["system", "light", "dark"]);
     expect(LANGUAGES).toEqual(["en", "de", "auto"]);
     expect(MODES).toEqual(["raw", "formal", "code"]);
     expect(MODEL_IDS).toEqual(["onnx-community/whisper-small", "onnx-community/whisper-large-v3-turbo"]);

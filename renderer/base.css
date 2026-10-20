@@ -1,0 +1,232 @@
+/* Shared tokens for the overlay and the settings window (falshaw glass kit).
+   Fonts are self-hosted (renderer/fonts, SIL OFL 1.1): CSP default-src 'self'
+   allows them, and the app makes no external requests. */
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("fonts/PlusJakartaSans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("fonts/PlusJakartaSans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/JetBrainsMono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/JetBrainsMono-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  color-scheme: light;
+  --canvas: #eef2f7;
+  --surface: #fff;
+  --ink: #172033;
+  --ink-65: rgba(23, 32, 51, 0.66);
+  --ink-45: rgba(23, 32, 51, 0.5);
+  --line: rgba(23, 32, 51, 0.12);
+  --line-2: rgba(23, 32, 51, 0.07);
+  --accent: #2563eb;
+  --accent-d: #1e40af;
+  --accent-soft: rgba(37, 99, 235, 0.1);
+  --teal: #0f766e;
+  --teal-soft: rgba(13, 148, 136, 0.12);
+  --amber: #b45309;
+  --amber-soft: rgba(180, 83, 9, 0.1);
+  --red: #b91c1c;
+  --red-soft: rgba(185, 28, 28, 0.08);
+  --dark: #101620;
+  --sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  /* glass */
+  --g-bg: rgba(255, 255, 255, 0.58);
+  --g-bg2: rgba(255, 255, 255, 0.45);
+  --g-line: rgba(255, 255, 255, 0.78);
+  --g-shadow: 0 10px 40px rgba(23, 32, 51, 0.1);
+  --blob1: rgba(37, 99, 235, 0.3);
+  --blob2: rgba(13, 148, 136, 0.22);
+  --blob3: rgba(147, 197, 253, 0.45);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0c111b;
+  --surface: #1a2233;
+  --ink: #e6ebf4;
+  --ink-65: rgba(230, 235, 244, 0.7);
+  --ink-45: rgba(230, 235, 244, 0.5);
+  --line: rgba(255, 255, 255, 0.1);
+  --line-2: rgba(255, 255, 255, 0.06);
+  --accent: #3b82f6;
+  --accent-d: #2563eb;
+  --accent-soft: rgba(59, 130, 246, 0.18);
+  --teal: #2dd4bf;
+  --teal-soft: rgba(45, 212, 191, 0.13);
+  --amber: #fbbf24;
+  --amber-soft: rgba(251, 191, 36, 0.12);
+  --red: #f87171;
+  --red-soft: rgba(248, 113, 113, 0.13);
+  --dark: #080c14;
+  --g-bg: rgba(22, 30, 48, 0.6);
+  --g-bg2: rgba(30, 40, 62, 0.5);
+  --g-line: rgba(255, 255, 255, 0.09);
+  --g-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --blob1: rgba(37, 99, 235, 0.35);
+  --blob2: rgba(13, 148, 136, 0.25);
+  --blob3: rgba(30, 58, 138, 0.5);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.eyebrow {
+  font: 500 11px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+/* Soft blob background */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--canvas);
+}
+.bg i {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+.bg .b1 {
+  width: 560px;
+  height: 560px;
+  left: -180px;
+  top: -200px;
+  background: var(--blob1);
+}
+.bg .b2 {
+  width: 460px;
+  height: 460px;
+  right: -140px;
+  top: 120px;
+  background: var(--blob2);
+}
+.bg .b3 {
+  width: 560px;
+  height: 560px;
+  left: 30%;
+  bottom: -320px;
+  background: var(--blob3);
+}
+
+.glass {
+  background: var(--g-bg);
+  border: 1px solid var(--g-line);
+  border-radius: 22px;
+  backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: var(--g-shadow);
+}
+
+.tile {
+  background: var(--g-bg2);
+  border: 1px solid var(--g-line);
+  border-radius: 18px;
+}
+
+/* Dark command-line block for transcripts and raw text */
+.code {
+  background: var(--dark);
+  color: #d6deec;
+  font: 13px/1.6 var(--mono);
+  border-radius: 12px;
+  padding: 12px 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+:root[data-theme="dark"] .code {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.b-teal {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+.b-blue {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.b-amber {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+.b-red {
+  background: var(--red-soft);
+  color: var(--red);
+}
+.b-grey {
+  background: var(--line-2);
+  color: var(--ink-65);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

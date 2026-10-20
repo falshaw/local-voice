@@ -7,41 +7,37 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'"
     />
-    <title>Voice</title>
+    <title>Local Voice</title>
+    <link rel="stylesheet" href="base.css" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="theme.js"></script>
   </head>
   <body>
     <div id="overlay">
-      <!-- Status indicator -->
       <div id="status-container">
-        <div id="mic-indicator">
+        <div id="mic-indicator" aria-hidden="true">
           <div id="mic-ring"></div>
-          <svg
-            id="mic-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
+          <svg id="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="9" y="2" width="6" height="12" rx="3" />
             <path d="M5 10a7 7 0 0 0 14 0" />
             <line x1="12" y1="17" x2="12" y2="21" />
             <line x1="8" y1="21" x2="16" y2="21" />
           </svg>
         </div>
-        <div id="status-text">Ready — Press F9</div>
+        <div id="status-copy">
+          <div class="eyebrow">Local Voice</div>
+          <div id="status-text" role="status" aria-live="polite">Ready — Press F9</div>
+        </div>
       </div>
 
       <!-- Model download progress -->
       <div id="download-container" class="hidden">
-        <div id="download-bar">
-          <div id="download-fill"></div>
-        </div>
+        <div id="download-bar"><div id="download-fill"></div></div>
         <div id="download-text">Loading model...</div>
       </div>
 
       <!-- Transcription preview -->
-      <div id="result-text" class="hidden"></div>
+      <div id="result-text" class="code hidden"></div>
     </div>
 
     <script src="app.js"></script>

@@ -90,8 +90,8 @@ describe("Settings defaults", () => {
 import { SETTING_KEYS, validateSetting } from "../lib/settings.js";
 
 describe("validateSetting", () => {
-  it("still carries the original five store keys (full 21-key contract: settings.test.js)", () => {
-    expect(SETTING_KEYS).toHaveLength(21);
+  it("still carries the original five store keys (full 22-key contract: settings.test.js)", () => {
+    expect(SETTING_KEYS).toHaveLength(22);
     for (const k of ["autoPaste", "hotkey", "language", "modelId", "showOverlay"]) {
       expect(SETTING_KEYS).toContain(k);
     }

@@ -9,6 +9,7 @@ const {
   nativeImage,
   globalShortcut,
   screen,
+  nativeTheme,
 } = require("electron");
 const { execFile } = require("child_process");
 const { Worker } = require("worker_threads");
@@ -78,6 +79,17 @@ async function initStore() {
   } catch (_) {
     store.set("modeCleanup", { ...modesLib.DEFAULT_MODE_CLEANUP });
   }
+}
+
+// The renderers read light/dark from prefers-color-scheme, which follows
+// nativeTheme.themeSource — so one setting re-themes every window live.
+function windowBackground() {
+  return nativeTheme.shouldUseDarkColors ? "#0c111b" : "#eef2f7";
+}
+
+function applyTheme() {
+  nativeTheme.themeSource = store.get("theme");
+  if (settingsWindow && !settingsWindow.isDestroyed()) settingsWindow.setBackgroundColor(windowBackground());
 }
 
 function publicSettings() {
@@ -590,13 +602,13 @@ function openSettingsWindow() {
     return;
   }
   settingsWindow = new BrowserWindow({
-    width: 820,
-    height: 640,
+    width: 880,
+    height: 660,
     minWidth: 600,
-    minHeight: 420,
-    title: "Voice — Settings",
+    minHeight: 440,
+    title: "Local Voice — Settings",
     autoHideMenuBar: true,
-    backgroundColor: "#0b0a1a",
+    backgroundColor: windowBackground(),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -780,6 +792,9 @@ function applySettingSideEffects(key, previous) {
     case "historyMax":
       if (history) history.setMax(store.get("historyMax"));
       break;
+    case "theme":
+      applyTheme();
+      break;
     case "language":
     case "showOverlay":
     case "autoPaste":
@@ -864,6 +879,8 @@ function setupIPC() {
     vad: { enabled: store.get("vadEnabled"), ready: vadReady },
     pushToTalk: pttHandle !== null,
     notices: [...notices.values()],
+    // Read-only display of the fixed cleanup target (constants, not settings).
+    cleanup: { model: ollama.CLEANUP_MODEL, url: ollama.OLLAMA_URL },
   }));
 
   ipcMain.handle("dictionary:get", (event) => {
@@ -962,6 +979,7 @@ if (!gotSingleInstanceLock) {
 app.whenReady().then(async () => {
   if (!gotSingleInstanceLock) return;
   await initStore();
+  applyTheme();
   history = new History({
     dir: path.join(app.getPath("userData"), "history"),
     max: store.get("historyMax"),
