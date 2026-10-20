@@ -421,11 +421,18 @@ async function deliverResult(data) {
 
 // --- Whisper Worker Thread ---
 
-function startWhisperWorker() {
+function loadWhisperModel() {
   stt.ready = false;
   stt.modelId = store.get("modelId");
   stt.device = store.get("sttDevice");
   setNotice("stt", null);
+  whisperWorker.postMessage({
+    type: "load:model",
+    data: { modelId: store.get("modelId"), device: store.get("sttDevice") },
+  });
+}
+
+function startWhisperWorker() {
   whisperWorker = new Worker(path.join(__dirname, "lib", "transcriber.js"), {
     workerData: { cacheDir: MODEL_CACHE_DIR },
   });
@@ -477,20 +484,16 @@ function startWhisperWorker() {
     if (state === "processing") dispatch("error");
   });
 
-  whisperWorker.postMessage({
-    type: "load:model",
-    data: { modelId: store.get("modelId"), device: store.get("sttDevice") },
-  });
+  loadWhisperModel();
 }
 
-function restartWhisperWorker() {
+// Model or device changed: reload inside the running worker (it disposes the old
+// sessions first). Never terminate() it — with a DirectML session loaded that
+// crashes the whole app. A job in flight is dropped; its result is ignored.
+function reloadWhisperModel() {
   if (state === "processing") dispatch("error");
-  if (whisperWorker) {
-    whisperWorker.removeAllListeners();
-    whisperWorker.terminate().catch(() => {});
-    whisperWorker = null;
-  }
-  startWhisperWorker();
+  if (whisperWorker) loadWhisperModel();
+  else startWhisperWorker();
   refreshTray();
 }
 
@@ -783,7 +786,7 @@ function applySettingSideEffects(key, previous) {
       break;
     case "modelId":
     case "sttDevice":
-      restartWhisperWorker();
+      reloadWhisperModel();
       break;
     case "vadEnabled":
       if (store.get("vadEnabled")) startVadWorker();

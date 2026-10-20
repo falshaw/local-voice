@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { FALLBACK_MODEL, DTYPES, modelOptions, sessionPlan } from "../lib/stt-config.js";
+import { FALLBACK_MODEL, DTYPES, modelOptions, sessionPlan, disposeSessions } from "../lib/stt-config.js";
 import { MODEL_IDS } from "../lib/settings.js";
 
 describe("stt-config", () => {
@@ -34,5 +34,32 @@ describe("stt-config", () => {
     const gpu = sessionPlan("onnx-community/whisper-large-v3-turbo", "dml");
     expect(gpu.primary).toMatchObject({ modelId: "onnx-community/whisper-large-v3-turbo", device: "dml" });
     expect(gpu.fallback).toEqual(modelOptions(FALLBACK_MODEL, "cpu"));
+  });
+});
+
+describe("disposeSessions (reload without terminating the worker)", () => {
+  const session = (log, fail = false) => ({
+    pipe: {
+      dispose: async () => {
+        log.push("d");
+        if (fail) throw new Error("boom");
+      },
+    },
+  });
+
+  it("disposes each distinct session once (primary may be the standby)", async () => {
+    const log = [];
+    const a = session(log);
+    const b = session(log);
+    expect(await disposeSessions([a, b, a, null, undefined])).toBe(2);
+    expect(log).toEqual(["d", "d"]);
+  });
+
+  it("keeps going when one dispose throws, and tolerates odd input", async () => {
+    const log = [];
+    expect(await disposeSessions([session(log, true), session(log)])).toBe(1);
+    expect(log).toEqual(["d", "d"]);
+    expect(await disposeSessions(null)).toBe(0);
+    expect(await disposeSessions([{ pipe: {} }, {}])).toBe(0);
   });
 });
