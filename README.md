@@ -21,6 +21,7 @@ Cloud dictation services send every recording to a third party. Local Voice keep
 - **Auto-paste:** the text is placed on the clipboard and pasted with Ctrl+V; the previous clipboard content is restored afterwards.
 - **Local history** of recent dictations (capped by count and audio size), optionally with WAV audio, with copy/re-paste from the settings window.
 - **Tray icon** showing idle / recording / processing state, model and device, and quick language switching.
+- **Light and dark theme** for the settings window and the overlay: follows Windows by default, or set it to light or dark (General > Appearance, or the toggle in the sidebar).
 
 ## Architecture
 
@@ -34,7 +35,7 @@ renderer (overlay)            main process                         worker thread
 
 - `main.js` - Electron main process: tray, hotkeys, IPC, paste, history, settings window.
 - `lib/` - pure, unit-tested modules (state machine, settings schema and validation, dictionary, modes, language selection, VAD maths, push-to-talk key mapping, history store) plus the two workers.
-- `renderer/` - overlay window and settings UI. Context isolation is on, Node integration off; the preload exposes only named IPC channels, and every setting written from the renderer is validated against a schema.
+- `renderer/` - overlay window and settings UI. Context isolation is on, Node integration off; the preload exposes only named IPC channels, and every setting written from the renderer is validated against a schema. Fonts (Plus Jakarta Sans, JetBrains Mono, SIL OFL 1.1) are bundled in `renderer/fonts/`, so the UI makes no network requests.
 - The Ollama URL (`http://127.0.0.1:11434`) and cleanup model are constants in `lib/ollama.js`, not settings, so a compromised renderer cannot redirect dictated text elsewhere.
 
 All writable data (settings, history, model cache) lives in `%APPDATA%\local-voice`.
@@ -71,7 +72,9 @@ npm run dist
 
 ## Configuration
 
-There are no environment variables. All configuration is done in the settings window and stored with `electron-store` in the user data directory. The allowed keys, types and defaults are defined in `lib/settings.js`. Cleanup prompts per mode are plain text files in `lib/prompts/`.
+All configuration is done in the settings window and stored with `electron-store` in the user data directory. The allowed keys, types and defaults are defined in `lib/settings.js`. Cleanup prompts per mode are plain text files in `lib/prompts/`.
+
+One environment variable exists for development and tests: `LOCAL_VOICE_USER_DATA`, an absolute path that replaces `%APPDATA%\local-voice`. A copy started with it gets its own settings, history, model cache and single-instance lock, so it can run next to an installed copy. Relative or empty values are ignored. Pick a different hotkey for the second copy; two apps cannot register the same one.
 
 ## Tests
 
