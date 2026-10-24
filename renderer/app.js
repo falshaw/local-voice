@@ -132,6 +132,8 @@ window.voice.onTranscriptionDone((text) => {
 window.voice.onTranscriptionError((error) => {
   document.body.className = "";
   statusText.textContent = "Error — try again";
+  // An earlier transcript still on screen would read as the failed one.
+  resultText.classList.add("hidden");
   console.error("Transcription error:", error);
   setTimeout(() => {
     statusText.textContent = readyLabel;

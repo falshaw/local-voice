@@ -19,12 +19,16 @@ function el(tag, className, text) {
   return node;
 }
 
-function button(label, className, onClick) {
+function button(label, className, onClick, ariaLabel) {
   const b = el("button", `btn btn-sm ${className || "btn-ghost"}`, label);
   b.type = "button";
+  // Row buttons repeat the same text; the label says which row they act on.
+  if (ariaLabel) b.setAttribute("aria-label", ariaLabel);
   b.addEventListener("click", onClick);
   return b;
 }
+
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 let toastTimer = null;
 function toast(msg, isError = false) {
@@ -393,7 +397,7 @@ function dictRow(entry = {}) {
   const modes = Array.isArray(entry.modes) ? entry.modes : [];
   for (const m of MODES) tr.append(checkCell(modes.includes(m), `Only in ${m} mode`));
   const td = el("td");
-  td.append(button("Delete", "btn-danger", () => tr.remove()));
+  td.append(button("Delete", "btn-danger", () => tr.remove(), "Delete this dictionary entry"));
   tr.append(td);
   return tr;
 }
@@ -431,7 +435,7 @@ async function saveDictionary() {
   try {
     const entries = collectDictionary();
     renderDictionary(await api.setDictionary(entries));
-    toast(`Dictionary saved (${entries.length} entries)`);
+    toast(`Dictionary saved (${plural(entries.length, "entry", "entries")})`);
   } catch (e) {
     toast(errMsg(e), true);
   }
@@ -457,7 +461,7 @@ function importDictionary(file) {
         };
       });
       renderDictionary(entries);
-      toast(`Imported ${entries.length} entries — click Save to keep them`);
+      toast(`Imported ${plural(entries.length, "entry", "entries")} — click Save to keep them`);
     })
     .catch((e) => toast(`Import failed: ${errMsg(e)}`, true));
 }
@@ -514,7 +518,7 @@ function ruleRow(rule = {}) {
   tr.append(selectCell(["process", "title"], rule.field === "title" ? "title" : "process"));
   tr.append(selectCell(MODES, MODES.includes(rule.mode) ? rule.mode : "raw"));
   const td = el("td");
-  td.append(button("Delete", "btn-danger", () => tr.remove()));
+  td.append(button("Delete", "btn-danger", () => tr.remove(), "Delete this mode rule"));
   tr.append(td);
   return tr;
 }
@@ -553,7 +557,7 @@ async function loadModes() {
 async function saveModes(payload) {
   try {
     renderModes(await api.setModes(payload));
-    toast(`Modes saved (${payload.rules.length} rules)`);
+    toast(`Modes saved (${plural(payload.rules.length, "rule", "rules")})`);
   } catch (e) {
     toast(errMsg(e), true);
   }
@@ -639,6 +643,7 @@ function historyMeta(e) {
 
 function historyItem(e) {
   const li = el("li", "entry tile");
+  const which = `the dictation from ${new Date(e.ts).toLocaleString()}`;
   li.append(historyMeta(e), el("div", "code text", e.text));
   if (e.raw && e.raw !== e.text) {
     li.append(el("div", "eyebrow raw-label", "Raw transcript"), el("div", "code raw", e.raw));
@@ -652,7 +657,7 @@ function historyItem(e) {
       } catch (err) {
         toast(errMsg(err), true);
       }
-    }),
+    }, `Copy ${which}`),
     button("Re-paste", "btn-primary", async () => {
       try {
         const r = await api.pasteHistory(e.id);
@@ -660,7 +665,7 @@ function historyItem(e) {
       } catch (err) {
         toast(errMsg(err), true);
       }
-    }),
+    }, `Re-paste ${which}`),
   );
   if (e.audio) {
     const play = button("▶", null, () => playEntry(e.id, play));
@@ -678,7 +683,7 @@ function historyItem(e) {
       } catch (err) {
         toast(errMsg(err), true);
       }
-    }),
+    }, `Delete ${which}`),
   );
   li.append(buttons);
   return li;
